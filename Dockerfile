@@ -1,10 +1,23 @@
-FROM eclipse-temurin:17-jdk-alpine
+# Multi-stage build
+FROM maven:3.8.6-eclipse-temurin-17 AS build
+WORKDIR /app
 
-# Install curl with apk
+# Copy Maven files first for better caching
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# Copy source code and build
+COPY src ./src
+RUN mvn clean package -DskipTests -B
+
+# Runtime stage
+FROM eclipse-temurin:17-jdk-alpine
 RUN apk add --no-cache curl
 
-VOLUME /temp
+VOLUME /tmp
 EXPOSE 8080
 
-COPY target/springboot-aws-repo-service.jar springboot-aws-repo-service.jar
-ENTRYPOINT ["java", "-jar", "springboot-aws-repo-service.jar"]
+# Copy the built JAR from build stage
+COPY --from=build /app/target/springboot-aws-repo-service.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "/app.jar"]
