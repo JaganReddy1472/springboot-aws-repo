@@ -7,7 +7,7 @@ phases:
       #- $(aws ecr get-login --region ap-south-1 --no-include-email)
       - aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 498516701466.dkr.ecr.ap-southeast-2.amazonaws.com
       - # Replace with this to your repository URI
-      - REPOSITORY_URI=498516701466.dkr.ecr.ap-southeast-2.amazonaws.com/spring-demo-ecr
+      - REPOSITORY_URI=498516701466.dkr.ecr.ap-southeast-2.amazonaws.com/myapplication-ecr
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
     commands:
