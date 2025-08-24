@@ -10,6 +10,8 @@ public class TestContoller {
 
     @GetMapping("/data")
     public String getName(){
-        return "AWS just started";
+        return "AWS just started now";
     }
+
+
 }
